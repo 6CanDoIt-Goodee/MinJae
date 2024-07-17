@@ -25,7 +25,9 @@ public class UserCreateEndServlet extends HttpServlet {
         String name = request.getParameter("name");
         String id = request.getParameter("id");
         String pw = request.getParameter("pw");
-        String email = request.getParameter("email");
+        String email_prefix = request.getParameter("email_prefix");
+        String email_domain = request.getParameter("email_domain");
+        String email = email_prefix + "@" + email_domain;
         String nickname = request.getParameter("nickname");
 
         HttpSession session = request.getSession();
@@ -43,7 +45,7 @@ public class UserCreateEndServlet extends HttpServlet {
             int result = UserDao.createUser(user);
 
             if (result > 0) {
-                response.sendRedirect("user/login");
+                response.sendRedirect("/");
             } else {
                 response.getWriter().write("fail");
             }

@@ -1,38 +1,41 @@
 @charset "UTF-8";
-nav {
-	margin: 15px 0;
+
+/* 한나체Pro */
+@font-face {
+    font-family: 'BMHANNAPro';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.0/BMHANNAPro.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+} 
+
+/* 여기어때 잘난체 고딕 */
+@font-face {
+    font-family: 'JalnanGothic';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
-#nav_wrap {
-	width: 1200px;
-	margin: 0 auto;
+
+/* 세방고딕 */
+@font-face {
+    font-family: 'SEBANG_Gothic_Bold';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2104@1.0/SEBANG_Gothic_Bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
-#nav_wrap .menu {
-	border-bottom: 1px solid #d9d9d9;
+
+/* 오아고딕 */
+@font-face {
+    font-family: 'OAGothic-ExtraBold';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/OAGothic-ExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
 }
-#nav_wrap .menu ul {
-	overflow: hidden;
-}
-#nav_wrap .menu ul li {
-	float: right;
-	margin-right: 5px;
-	margin-left: 30px;
-}
-#nav_wrap .search {
-	height: 70px;
-	line-height: 70px;
-	text-align: center;
-	border-bottom: 1px solid #d9d9d9;
-}
-#nav_wrap .search input[type='text'] {
-	width: 300px;
-	padding: 10px;
-	border: 1px solid #adadad;
-	border-radius: 5px;
-}
-#nav_wrap .search input[type='submit'] {
-	width: 80px;
-	padding: 10px;
-	border: 1px solid #adadad;
-	border-radius: 5px;
-	cursor: pointer;
+
+/* 레페리포인트 */
+@font-face {
+    font-family: 'LeferiPoint-BlackA';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/LeferiPoint-BlackA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }

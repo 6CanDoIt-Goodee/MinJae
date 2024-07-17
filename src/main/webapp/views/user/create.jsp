@@ -31,13 +31,13 @@
                     <input type="text" name="email_domain" style="width: 200px;">
                     <select id="email_select" name="email_select">
                         <option value="0">직접입력</option>
-                        <option value="1">네이버</option>
-                        <option value="2">다음</option>
-                        <option value="3">네이트</option>
+                        <option value="1">naver.com</option>
+                        <option value="2">gmail.com</option>
+                        <option value="3">daum.net</option>
                     </select>
-                    <button type="button">인증번호 받기</button><br>
-                    <input type="text" id="email_number" maxlength="6" placeholder="인증 코드 6자리를 입력해주세요." style="width: 500px; margin-left: 125px;">
-                    <button type="button">인증번호 확인</button><br>
+                    <button type="button" onclick="sendVerificationCode()">인증번호 받기</button>
+                    <input type="text" name="email_number" maxlength="6" placeholder="인증 코드 6자리를 입력해주세요." style="width: 500px; margin-left: 125px;">
+                    <button type="button" onclick="verifyCode()">인증번호 확인</button><br>
                     <label for="nickname">닉네임</label>
                     <input type="text" name="nickname" style="width: 500px;">
                     <button type="button">닉네임 랜덤 생성</button><br>
@@ -52,6 +52,47 @@
     </main>
 
     <script>
+    function sendVerificationCode() {
+        const form = document.create_account_form;
+        const email = form.email_prefix.value + "@" + form.email_domain.value;
+        if (!email.includes("@")) {
+            alert("올바른 이메일 주소를 입력하세요.");
+            return;
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/user/sendVerificationCode", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                alert("인증번호가 발송되었습니다. 이메일을 확인하세요.");
+            }
+        };
+        xhr.send("email=" + encodeURIComponent(email));
+    }
+
+    function verifyCode() {
+        const form = document.create_account_form;
+        const email = form.email_prefix.value + "@" + form.email_domain.value;
+        const code = form.email_number.value;
+        if (code.length !== 6) {
+            alert("6자리 인증 코드를 입력하세요.");
+            return;
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/user/verifyCode", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                if (xhr.responseText === "success") {
+                    alert("인증번호가 확인되었습니다.");
+                } else {
+                    alert("잘못된 인증번호입니다.");
+                }
+            }
+        };
+        xhr.send("email=" + encodeURIComponent(email) + "&code=" + encodeURIComponent(code));
+    }
+    
         function submit_button() {
             const form = document.create_account_form;
             if (!form.id.value) {
@@ -72,6 +113,9 @@
             } else if (!form.email_prefix.value || !form.email_domain.value) {
                 alert("이메일을 입력하세요.");
                 form.email_prefix.focus();
+            }else if(!form.email_number.value){
+            	alert("인증번호를 입력하세요.");
+                form.email_number.focus();
             } else if (!form.nickname.value) {
                 alert("닉네임을 입력하세요.");
                 form.nickname.focus();

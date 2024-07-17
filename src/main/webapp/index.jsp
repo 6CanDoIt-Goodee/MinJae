@@ -12,7 +12,7 @@
 	<section>
 		<div id="section_wrap">
 			<div class="word">
-				<h3>HOME</h3>
+				
 			</div>
 		</div>
 	</section>

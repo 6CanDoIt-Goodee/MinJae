@@ -11,21 +11,22 @@
 	<main>
         <section id="right">
             <div id="main_div">
-                <a href="#" id="main_logo"><h1>Knock Book</h1></a>
+                <a href="#" id="main_logo">
+                    <h1>Knock Book</h1>
+                </a>
                 <form name="login_form" action="/user/loginEnd" method="post">
-                <input type="text" name="id" placeholder="아이디를 입력해 주세요" style="width: 400px;">
-                <input type="password" name="pw" placeholder="비밀번호를 입력해 주세요" style="width: 400px;">
-                <div>
-                    <button onclick="loginForm();">로그인</button>
-                </div>
+                    <input type="text" name="id" placeholder="아이디를 입력해 주세요">
+                    <input type="password" name="pw" placeholder="비밀번호를 입력해 주세요">
+                    <button type="button" onclick="loginForm();">로그인</button>
                 </form>
                 <br>
                 <div id="down_link">
-                    <a href="#">아이디 찾기  | </a><a href="#">비밀번호 찾기 |  </a><a href="#">회원가입</a>
+                    <a href="/user/findid">아이디 찾기 | </a><a href="/user/findpw">비밀번호 찾기 | </a><a href="/user/create">회원가입</a>
                 </div>
             </div>
         </section>
     </main>
+
 	<script type="text/javascript">
 		function loginForm() {
 			let form = document.login_form;

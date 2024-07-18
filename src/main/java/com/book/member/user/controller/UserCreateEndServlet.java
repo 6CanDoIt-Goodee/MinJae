@@ -4,7 +4,7 @@ package com.book.member.user.controller;
 
 import java.io.IOException;
 
-
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -45,12 +45,12 @@ public class UserCreateEndServlet extends HttpServlet {
             int result = UserDao.createUser(user);
 
             if (result > 0) {
-                response.sendRedirect("/");
+            	RequestDispatcher view = request.getRequestDispatcher("/views/user/create_success.jsp");
+    			view.forward(request, response);
             } else {
                 response.getWriter().write("fail");
+                response.getWriter().write("인증번호가 일치하지 않습니다.");
             }
-        } else {
-            response.getWriter().write("인증번호가 일치하지 않습니다.");
-        }
+        } 
     }
 }

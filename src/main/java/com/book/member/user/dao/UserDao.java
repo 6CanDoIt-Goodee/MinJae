@@ -3,12 +3,16 @@ package com.book.member.user.dao;
 import static com.book.common.sql.JDBCTemplate.close;
 import static com.book.common.sql.JDBCTemplate.getConnection;
 
+import java.lang.reflect.Member;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.book.member.user.vo.User;
+
+
 
 public class UserDao {
 	public static int createUser(User u) {
@@ -34,27 +38,7 @@ public class UserDao {
 		return result;	
 	}
 
-	public boolean verifyUser(String email) {
-		PreparedStatement pstmt = null;
-		Connection conn = getConnection();
-		boolean isVerified = false;
-		try {
-			 String sql = "UPDATE users SET is_verified = ? WHERE user_email = ?";
-	            pstmt = conn.prepareStatement(sql);
-	            pstmt.setBoolean(1, true);
-	            pstmt.setString(2, email);
-	            int rowsUpdated = pstmt.executeUpdate();
-	            if (rowsUpdated > 0) {
-	                isVerified = true;
-	            }
-		}catch(Exception e) {
-			e.printStackTrace();
-		}finally {
-			close(conn);
-			close(pstmt);
-		}
-		return isVerified;
-	}
+
 	
 	public User loginUser(String id, String pw) {
 		PreparedStatement pstmt = null;
@@ -75,8 +59,7 @@ public class UserDao {
 						rs.getString("user_pw"),
 						rs.getString("user_email"),
 						rs.getString("user_nickname"),
-						rs.getInt("user_active"),
-						rs.getBoolean("is_verified"));
+						rs.getInt("user_active"));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -106,8 +89,38 @@ public class UserDao {
 						rs.getString("user_pw"),
 						rs.getString("user_email"),
 						rs.getString("user_nickname"),
-						rs.getInt("user_active"),
-						rs.getBoolean("is_verified"));			
+						rs.getInt("user_active"));		
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(conn);
+			close(rs);
+			close(pstmt);
+		}
+		return u;
+	}
+	
+	public User findpw(String id,String email) {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Connection conn =getConnection();
+		User u=null;
+		try {
+			String sql = "SELECT * FROM `users` WHERE `user_id`=? AND `user_email` = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setString(2, email);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				u = new User(
+						rs.getInt("user_no"),
+						rs.getString("user_name"),
+						rs.getString("user_id"),
+						rs.getString("user_pw"),
+						rs.getString("user_email"),
+						rs.getString("user_nickname"),
+						rs.getInt("user_active"));		
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -142,27 +155,35 @@ public class UserDao {
 	}
 	
 
-	public User getUserByNameAndEmail(String name, String email) throws SQLException {
+	public List<User> findid(String name, String email) {
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
         Connection conn = getConnection();
-        String query = "SELECT * FROM users WHERE user_name = ? AND user_email = ?";
-        pstmt = conn.prepareStatement(query);
+        List<User> resultList =new ArrayList<User>();
+        try {
+        String sql = "SELECT * FROM `users` WHERE `user_name` = ? AND `user_email` = ?";
+        pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, name);
         pstmt.setString(2, email);
-        ResultSet rs = pstmt.executeQuery();
-        if (rs.next()) {
-            User u = new User(
-                    rs.getInt("user_no"),
-                    rs.getString("user_name"),
-                    rs.getString("user_id"),
-                    rs.getString("user_pw"),
-                    rs.getString("user_email"),
-                    rs.getString("user_nickname"),
-                    rs.getInt("user_active"),
-                    rs.getBoolean("is_verified"));
-            return u;
-        } else {
-            return null;
+        rs = pstmt.executeQuery();
+        while(rs.next()) {
+			User u = new User (
+					rs.getInt("user_no"),
+					rs.getString("user_name"),
+					rs.getString("user_id"),
+					rs.getString("user_pw"),
+					rs.getString("user_email"),
+					rs.getString("user_nickname"),
+					rs.getInt("user_active"));
+			resultList.add(u);
+			}
+        }catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+        	close(conn);
+        	close(rs);
+        	close(pstmt);
         }
+        return resultList;
     }
 }

@@ -31,13 +31,6 @@ public class UserLoginEndServlet extends HttpServlet {
 		String pw = request.getParameter("pw");
 		
 		User u = new UserDao().loginUser(id,pw);
-		//User u = new User(1,"admin","암호화된 비밀번호","관리자");
-		// User u = null;
-		// 1. User u = new UserService().loginUser(id,pw); 코드 주석처리
-		// 2. User 객체의 매개변수 생성자에 데이터베이스 실제 값을 넣어서 User 구성
-		// 예시) new User(1,"admin","암호화된 비밀번호","관리자");
-		// 3. 매개변수 생성자로 만든 객체 주석 처리
-		// 4. User u = null;로 실패 상황도 테스트해보기
 		
 		if(u != null) {
 			HttpSession session = request.getSession(true);

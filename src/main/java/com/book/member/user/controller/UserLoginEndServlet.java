@@ -33,6 +33,14 @@ public class UserLoginEndServlet extends HttpServlet {
 		User u = new UserDao().loginUser(id,pw);
 		
 		if(u != null) {
+			if (u.getUser_active() == 0) {
+                request.setAttribute("errorMessage", "탈퇴한 회원입니다.");
+                RequestDispatcher view = request.getRequestDispatcher("/views/user/login_fail.jsp");
+                view.forward(request, response);
+                return;
+            }
+			
+			
 			HttpSession session = request.getSession(true);
 			if(session.isNew() || session.getAttribute("user")==null) {
 				session.setAttribute("user", u);

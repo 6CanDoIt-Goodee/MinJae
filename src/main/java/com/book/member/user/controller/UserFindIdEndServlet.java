@@ -37,11 +37,11 @@ public class UserFindIdEndServlet extends HttpServlet {
         if (sessionCode != null && sessionCode.equals(inputCode)) {
             List<User> user = new UserDao().findid(name,email);
             
-            if (user != null) {
+            if (user != null && !user.isEmpty()) {
             	session.setAttribute("user", user);
             	response.sendRedirect("/views/user/findid_success.jsp");
             } else {
-                response.getWriter().write("일치하는 사용자가 없습니다.");
+            	response.sendRedirect("/views/user/findid_fail.jsp");
             }
         } else {
             response.getWriter().write("인증 실패");

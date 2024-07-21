@@ -33,8 +33,5 @@ public class UserFindIdServlet extends HttpServlet {
         String code = verification.generateVerificationCode();
         emailSender.sendEmail(email, "인증 코드", "인증 코드는 " + code + " 입니다.");
         
-//        request.getSession().setAttribute("verificationCode", code);
-//        RequestDispatcher dispatcher = request.getRequestDispatcher("/");
-//        dispatcher.forward(request, response);
     }
 }

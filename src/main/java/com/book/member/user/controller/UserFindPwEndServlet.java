@@ -1,7 +1,6 @@
 package com.book.member.user.controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -40,7 +39,7 @@ public class UserFindPwEndServlet extends HttpServlet {
             if (user != null) {
             	response.sendRedirect("/views/user/changepw.jsp");
             } else {
-                response.getWriter().write("일치하는 사용자가 없습니다.");
+            	response.sendRedirect("/views/user/findpw_fail.jsp");
             }
         } else {
             response.getWriter().write("인증 실패");

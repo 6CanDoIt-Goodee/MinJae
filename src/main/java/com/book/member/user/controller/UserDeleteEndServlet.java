@@ -2,6 +2,7 @@ package com.book.member.user.controller;
 
 import java.io.IOException;
 
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,33 +13,34 @@ import javax.servlet.http.HttpSession;
 import com.book.member.user.dao.UserDao;
 import com.book.member.user.vo.User;
 
-@WebServlet(name="userEditEnd",urlPatterns="/user/editEnd")
-public class UserEditEndServlet extends HttpServlet {
+
+
+@WebServlet(name="userdeleteEnd",urlPatterns="/user/deleteEnd")
+public class UserDeleteEndServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-   
-    public UserEditEndServlet() {
+
+    public UserDeleteEndServlet() {
         super();
     }
 
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(false); // 없는걸 등록할때는 true 있는걸 볼떄는 false;
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession(false); 
 		int no = 0;
 		User u = new User();
 		if(session != null) {
-			u =(User)session.getAttribute("user"); // 로그인 할때 속성값(값)을 User 객체에 User로 다운그레이드해서 넣어줌
+			u =(User)session.getAttribute("user"); 
 			no = u.getUser_no();
 			}
 		String pw = request.getParameter("pw");
-		String name = request.getParameter("name");
-		String nickname = request.getParameter("nickname");
-		String email = request.getParameter("email");
-		int result = new UserDao().editUser(no,pw,name,nickname,email);
+		System.out.println(pw);
+		System.out.println(no);
+
+		int result = new UserDao().deleteUser(pw,no);
 		if(result > 0) {
-			response.sendRedirect("/");
+			response.sendRedirect("/views/user/delete_success.jsp");
 		}else {
-			System.out.println("실패");
+			request.setAttribute("errorMessage", "비밀번호가 올바르지 않거나 탈퇴 처리 중 오류가 발생했습니다.");
 		}
 	}
 		

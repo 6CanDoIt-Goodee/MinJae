@@ -12,7 +12,7 @@
 	<section class="main_header">
 		<header>
 			<div id="header_div">
-				<a href="#" class="main_logo" style="margin-left: 100px;">Knock Book</a>
+				<a href="/" class="main_logo" style="margin-left: 100px;">Knock Book</a>
 			</div>
 		</header>
 		<main>
@@ -22,10 +22,10 @@
 		</main>
 		<footer>
 			<a href="/views/user/login.jsp"> 
-			<input class="btn" type="button" value="로그인" style="margin-right: 20px;">
+			<input class="btn" type="button" value="로그인" style="margin-right: 20px;"onclick="location.href='/user/login'">
 			</a> 
 			<a href="/"> 
-			<input class="btn" type="button" value="홈으로" style="margin-left: 20px;">
+			<input class="btn" type="button" value="홈으로" style="margin-left: 20px;"onclick="location.href='/'">
 			</a>
 		</footer>
 	</section>

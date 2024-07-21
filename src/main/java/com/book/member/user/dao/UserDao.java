@@ -10,34 +10,95 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jasper.tagplugins.jstl.core.Catch;
+
 import com.book.member.user.vo.User;
 
 
 
 public class UserDao {
-	public static int createUser(User u) {
+	
+	public int getEmailCount(String email) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Connection conn = getConnection();
+        int count = 0;
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM `users` WHERE `user_email` = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("count");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(conn);
+            close(rs);
+            close(pstmt);
+        }
+        return count;
+    }
+	
+	public int createUser(User u) {
+        PreparedStatement pstmt = null;
+        Connection conn = getConnection();
+        int result = 0;
+        try {
+            // 이메일당 계정 수 확인
+            int emailCount = getEmailCount(u.getUser_email());
+            if (emailCount >= 3) {
+                return -1; 
+            }
+            String sql = "INSERT INTO `users`(user_name, user_id, user_pw, user_email, user_nickname, is_verified) VALUES(?, ?, ?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, u.getUser_name());
+            pstmt.setString(2, u.getUser_id());
+            pstmt.setString(3, u.getUser_pw());
+            pstmt.setString(4, u.getUser_email());
+            pstmt.setString(5, u.getUser_nickname());
+            pstmt.setBoolean(6, false);
+            result = pstmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(conn);
+            close(pstmt);
+        }
+        return result;
+    }
+	
+	public User checkid(String id) {
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		Connection conn = getConnection();
-		int result = 0;
+		User u= null;
 		try {
-			String sql = "INSERT INTO `users`(user_name,user_id, user_pw,user_email,user_nickname,is_verified) VALUES(?,?,?,?,?,?)";
+			String sql = "SELECT * FROM `users` WHERE user_id=?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, u.getUser_name());
-			pstmt.setString(2, u.getUser_id());
-			pstmt.setString(3, u.getUser_pw());
-			pstmt.setString(4, u.getUser_email());
-			pstmt.setString(5, u.getUser_nickname());
-			pstmt.setBoolean(6, false);
-			result = pstmt.executeUpdate();
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				u = new User(
+						rs.getInt("user_no"),
+						rs.getString("user_name"),
+						rs.getString("user_id"),
+						rs.getString("user_pw"),
+						rs.getString("user_email"),
+						rs.getString("user_nickname"),
+						rs.getInt("user_active"),
+						rs.getTimestamp("user_create").toLocalDateTime());
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
 			close(conn);
+			close(rs);
 			close(pstmt);
 		}
-		return result;	
+		return u;
 	}
-
 
 	
 	public User loginUser(String id, String pw) {
@@ -59,7 +120,8 @@ public class UserDao {
 						rs.getString("user_pw"),
 						rs.getString("user_email"),
 						rs.getString("user_nickname"),
-						rs.getInt("user_active"));
+						rs.getInt("user_active"),
+						rs.getTimestamp("user_create").toLocalDateTime());
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -89,7 +151,8 @@ public class UserDao {
 						rs.getString("user_pw"),
 						rs.getString("user_email"),
 						rs.getString("user_nickname"),
-						rs.getInt("user_active"));		
+						rs.getInt("user_active"),
+						rs.getTimestamp("user_create").toLocalDateTime());	
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -120,7 +183,9 @@ public class UserDao {
 						rs.getString("user_pw"),
 						rs.getString("user_email"),
 						rs.getString("user_nickname"),
-						rs.getInt("user_active"));		
+						rs.getInt("user_active"),
+						rs.getTimestamp("user_create").toLocalDateTime());
+				System.out.println("dao");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -174,7 +239,8 @@ public class UserDao {
 					rs.getString("user_pw"),
 					rs.getString("user_email"),
 					rs.getString("user_nickname"),
-					rs.getInt("user_active"));
+					rs.getInt("user_active"),
+					rs.getTimestamp("user_create").toLocalDateTime());
 			resultList.add(u);
 			}
         }catch(Exception e) {
@@ -186,4 +252,97 @@ public class UserDao {
         }
         return resultList;
     }
+	 public String getRandomAdjective() {
+		 Connection conn = getConnection();
+	     PreparedStatement pstmt = null;
+	     ResultSet rs = null;
+	     String ad = null;
+	     try {
+	    	 String sql = "SELECT adjective FROM adjective ORDER BY RAND() LIMIT 1";
+	    	 pstmt = conn.prepareStatement(sql);
+	    	 rs = pstmt.executeQuery();
+	    	 if (rs.next()) {
+	                ad = rs.getString("adjective");
+	            }
+	     }catch(Exception e) {
+	    	 e.printStackTrace();
+	     }finally{
+	    	close(conn);
+	        close(rs);
+	        close(pstmt);
+	     }
+	     return ad;
+	 }
+	public List<String> getRandomNouns(int count){
+		Connection conn = getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<String> nouns = new ArrayList<>();
+        try {
+        	String sql = "SELECT noun FROM noun ORDER BY RAND() LIMIT ?";
+        	pstmt = conn.prepareStatement(sql);
+        	pstmt.setInt(1, count);
+	    	rs = pstmt.executeQuery();
+	    	while (rs.next()) {
+                nouns.add(rs.getString("noun"));
+            }
+        }catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+        	close(conn);
+	        close(rs);
+	        close(pstmt);
+        }
+        return nouns;
+	}
+	
+	public int deleteUser(String pw,int no) {
+		PreparedStatement pstmt = null;
+		Connection conn =getConnection();
+		int result = 0;
+		try {
+			String sql = "UPDATE `users` set user_active=0 WHERE user_no=? AND user_pw=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			pstmt.setString(2, pw);
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(conn);
+			close(pstmt);
+		}
+		return result;
+	}
+	public List<User> getAllUsers() {
+		Connection conn = getConnection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<User> users  = new ArrayList<>();
+        try {
+        	String sql = "SELECT * FROM `users`";
+        	pstmt = conn.prepareStatement(sql);
+        	rs = pstmt.executeQuery();
+        	while (rs.next()) {
+        		User u = new User (
+    					rs.getInt("user_no"),
+    					rs.getString("user_name"),
+    					rs.getString("user_id"),
+    					rs.getString("user_pw"),
+    					rs.getString("user_email"),
+    					rs.getString("user_nickname"),
+    					rs.getInt("user_active"),
+    					rs.getTimestamp("user_create").toLocalDateTime());
+    			users.add(u);
+            }
+        }catch(Exception e) {
+        	e.printStackTrace();
+        }finally {
+        	close(conn);
+	        close(rs);
+	        close(pstmt);
+        }
+        return users;
+	}
+	
 }

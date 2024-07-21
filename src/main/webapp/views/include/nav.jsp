@@ -7,12 +7,11 @@
 
 	* {
 	    background-color: rgb(247, 247, 247);;
-	    /* background-color: rgb(237, 237, 233); */
+	    
 	    box-sizing: border-box; 
 	    margin: 0;  
 	}
 	
-	/* header */
 	
 	ul, ol {
 	    list-style: none;
@@ -114,6 +113,9 @@
 				</li>
 				<li>
 				 	<a href="/user/checkpw"class="header_list" id="header_join">계정수정</a>
+				</li>
+				<li>
+				 	<a href="/user/delete"class="header_list" id="header_join">계정삭제</a>
 				</li>
 			</ul>
 		</div>

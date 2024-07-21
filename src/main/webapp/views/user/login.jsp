@@ -11,12 +11,12 @@
 	<main>
         <section id="right">
             <div id="main_div">
-                <a href="#" id="main_logo">
+                <a href="/" id="main_logo">
                     <h1>Knock Book</h1>
                 </a>
                 <form name="login_form" action="/user/loginEnd" method="post">
-                    <input type="text" name="id" placeholder="아이디를 입력해 주세요">
-                    <input type="password" name="pw" placeholder="비밀번호를 입력해 주세요">
+                    <input type="text" name="id" placeholder="아이디를 입력해 주세요" style="border-radius: 5px;">
+                    <input type="password" name="pw" placeholder="비밀번호를 입력해 주세요" style="border-radius: 5px;">
                     <button type="button" onclick="loginForm();">로그인</button>
                 </form>
                 <br>

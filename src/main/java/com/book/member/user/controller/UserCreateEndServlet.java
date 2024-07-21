@@ -3,8 +3,6 @@ package com.book.member.user.controller;
 
 
 import java.io.IOException;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,24 +31,25 @@ public class UserCreateEndServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String sessionCode = (String) session.getAttribute("verificationCode");
         String inputCode = request.getParameter("email_number");
+        
 
         if (sessionCode != null && sessionCode.equals(inputCode)) {
-            UserDao userDao = new UserDao();
             User user = new User();
             user.setUser_name(name);
             user.setUser_id(id);
             user.setUser_pw(pw);
             user.setUser_email(email);
             user.setUser_nickname(nickname);
-            int result = UserDao.createUser(user);
-
-            if (result > 0) {
-            	RequestDispatcher view = request.getRequestDispatcher("/views/user/create_success.jsp");
-    			view.forward(request, response);
+            int result = new UserDao().createUser(user);
+            System.out.println(result);
+            if (result == -1) {
+                // 이메일당 계정 수 제한 초과
+                request.getRequestDispatcher("/views/user/three_email.jsp").forward(request, response);
+            } else if (result > 0) {
+                response.sendRedirect("/views/user/create_success.jsp");
             } else {
-                response.getWriter().write("fail");
-                response.getWriter().write("인증번호가 일치하지 않습니다.");
+            	response.sendRedirect("/");
             }
-        } 
+        }
     }
 }

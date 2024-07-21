@@ -11,7 +11,7 @@
     <main>
         <div class="container">
             <nav class="navbar">
-                <a href="#" id="main_logo">Knock Book</a>
+                <a href="/" id="main_logo">Knock Book</a>
             </nav>
             <div class="text-center">
                 <h2>아이디 찾기</h2>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="button-group">
                         <button type="button" class="btn" onclick="next_button();">다음</button>
-                        <button type="button" class="btn btn-secondary">취소</button>
+                        <button type="button" class="btn btn-secondary"onclick="location.href='/'">취소</button>
                     </div>
                 </form>
             </div>
@@ -45,7 +45,7 @@
     <script type="text/javascript">
         function sendVerificationCode() {
             const form = document.findid_form;
-            const email = form.email.value; // 수정: email_prefix와 email_domain 대신 email.value 사용
+            const email = form.email.value; 
             if (!email.includes("@")) {
                 alert("올바른 이메일 주소를 입력하세요.");
                 return;

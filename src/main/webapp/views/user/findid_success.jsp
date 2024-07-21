@@ -12,7 +12,7 @@
 <body>
 	 <div class="container">
         <nav id="header_nav">
-            <a href="#" id="main_logo">Knock Book</a>
+            <a href="/" id="main_logo">Knock Book</a>
         </nav>
         <div class="text-center" >
             <h2>아이디 찾기</h2>
@@ -36,8 +36,8 @@
             </ol>
         </div>
         <div class="button-group">
-            <button type="button" class="btn">다음</button>
-            <button type="button" class="btn btn-secondary">취소</button>
+            <button type="button" class="btn"onclick="location.href='/user/findpw'"style="width: 125px;">비밀번호 찾기</button>
+            <button type="button" class="btn btn-secondary"onclick="location.href='/user/login'"style="width: 125px;">취소</button>
         </div>
     </div>
 </body>

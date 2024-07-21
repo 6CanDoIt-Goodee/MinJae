@@ -5,11 +5,12 @@
 <head>
 <meta charset="UTF-8">
 <title>비밀번호 재설정</title>
+<link href="../../resources/css/user/changepw.css" rel="stylesheet">
 </head>
 <body>
 	 <div class="container">
         <nav class="navbar">
-            <a href="#" id="main_logo">Knock Book</a>
+            <a href="/" id="main_logo">Knock Book</a>
         </nav>
         <div class="text-center">
             <h2>비밀번호 재설정</h2>
@@ -24,7 +25,7 @@
                     <input type="password" id="pw" name="pw" placeholder="새 비밀번호" oninput="validatePassword()">
                 </div>
                 <div class="tooltip">
-                    <span id="tooltip-text"  style="font-size: 10px;color: red;">6자리 이상 10자리 이하의 영문 대/소문자, 숫자, 특수문자 사용 가능합니다.</span>
+                    <span id="tooltip-text"  style="font-size: 10px;color: red;">길이가8~16자리 이하의 영문 대/소문자, 숫자, 특수문자 사용 가능합니다.</span>
                 </div>
             </div>
             <div class="form-group">
@@ -33,7 +34,7 @@
             </div>
             <div class="button-group">
                 <button type="button" onclick="submit_button();" class="btn" style="margin-top: 50px; margin-right: 30px">확인</button>
-                <button type="button" class="btn btn-secondary" style="margin-top: 50px; margin-left: 30px">취소</button>
+                <button type="button" class="btn btn-secondary" style="margin-top: 50px; margin-left: 30px" onclick="location.href='/'">취소</button>
             </div>
             </form>
         </div>
@@ -43,7 +44,7 @@
         function validatePassword() {
             const passwordInput = document.getElementById('pw');
             const tooltipText = document.getElementById('tooltip-text');
-            const lengthPattern = /^[a-zA-Z\d@$!%*?&]{6,10}$/;
+            const lengthPattern = /^[a-zA-Z\d@$!%*?&]{8,16}$/;
             const letterPattern = /[a-zA-Z]/; 
             const numberPattern = /\d/; 
             const specialCharPattern = /[@$!%*?&]/;
@@ -61,7 +62,7 @@
         function submit_button() {
             const form = document.changepw_form;
 
-            var lengthPattern = /^[a-zA-Z\d@$!%*?&]{6,10}$/;
+            var lengthPattern = /^[a-zA-Z\d@$!%*?&]{8,16}$/;
             var letterPattern = /[a-zA-Z]/; 
             var numberPattern = /\d/; 
             var specialCharPattern = /[@$!%*?&]/;
@@ -75,16 +76,16 @@
             } else if (form.pw.value !== form.chpw.value) {
                 alert("비밀번호가 일치하는지 확인해주세요.");
                 form.pw.focus();
-            } else if (!lengthPattern.test(form.pw.value.value)) {
-                alert('비밀번호는 6자에서 10자 사이의 영문자, 숫자 및 특수문자만 포함해야 합니다.');
+            } else if (!lengthPattern.test(form.pw.value)) {
+                alert('비밀번호는 8자에서 16자 사이의 영문자, 숫자 및 특수문자만 포함해야 합니다.');
                 form.pw.focus();
-            } else if (!letterPattern.test(form.pw.value.value)) {
+            } else if (!letterPattern.test(form.pw.value)) {
                 alert('비밀번호는 적어도 하나의 영문자를 포함해야 합니다.');
                 form.pw.focus();
-            } else if (!numberPattern.test(form.pw.value.value)) {
+            } else if (!numberPattern.test(form.pw.value)) {
                 alert('비밀번호는 적어도 하나의 숫자를 포함해야 합니다.');
                 form.pw.focus();
-            }else if(!specialCharPattern.test(form.pw.value.value)){
+            }else if(!specialCharPattern.test(form.pw.value)){
                 alert('비밀번호는 적어도 하나의 특수문자를 포함해야 합니다.');
                 form.pw.focus();
             } else {

@@ -11,7 +11,7 @@
 	<main>
         <div class="container">
         <nav class="navbar">
-            <a href="#" id="main_logo">Knock Book</a>
+            <a href="/" id="main_logo">Knock Book</a>
         </nav>
         <div class="text-center">
             <h2>비밀번호 찾기</h2>
@@ -20,7 +20,7 @@
             <p>본인확인 이메일 주소와 입력한 이메일 주소가 같아야, 인증번호를 받을 수 있습니다.</p>
         </div>
         <div>
-        <form name="findpw_form" action="/user/findpw" method="post">
+        <form name="findpw_form" action="/user/findpwend" method="post">
             <div class="form-group">
                 <label for="name">아이디 :</label>
                 <input type="text" id="id" name="id" placeholder="이름을 입력하세요" style="width: 352px;">
@@ -36,7 +36,7 @@
             </div>
             <div class="button-group">
                 <button type="button" class="btn" onclick="next_button();">다음</button>
-                <button type="button" class="btn btn-secondary">취소</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='/'">취소</button>
             </div>
             </form>
         </div>

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.List" %>
-<%@page import="java.util.Map" %>
 <%@page import="com.book.member.user.vo.User" %> 
 <!DOCTYPE html>
 <html>
@@ -79,12 +78,21 @@
             color: white;
         }
     </style>
+    
 </head>
 <body>
 <section>
     <div id="section_wrap" class="container">
         <div class="book_list">
             <table class="book_table">
+            <select id="order_select" name="order_select" onchange="setOrder();">
+                <option value="">정렬</option>
+                <option value="user_name">이름</option>
+                <option value="user_nickname">닉네임</option>
+                <option value="user_email">이메일</option>
+                <option value="user_create">회원가입 일시</option>
+                <option value="user_active">비활성화 여부</option>
+            </select>
                 <thead>
                     <tr>
                         <th>이름</th>
@@ -97,18 +105,18 @@
                 </thead>
                 <tbody>
                     <% 
-                        List<Map<String, Object>> list = (List<Map<String, Object>>) session.getAttribute("user");
+                        List<User> resultList = ((List<User>)request.getAttribute("resultList"));
 
-                        if (list != null) {
-                            for (Map<String, Object> row : list) { 
+                        if (resultList != null) {
+                            for (User row : resultList) { 
                     %>
                     <tr>
-                        <td><%= row.get("user_name") %></td>
-                        <td><%= row.get("user_nickname") %></td>
-                        <td><%= row.get("user_id") %></td>
-                        <td><%= row.get("user_email") %></td>
-                        <td><%= row.get("user_create") %></td>
-                        <td><%= row.get("user_active") %></td>
+                        <td><%= row.getUser_name() %></td>
+                        <td><%= row.getUser_nickname() %></td>
+                        <td><%= row.getUser_id() %></td>
+                        <td><%= row.getUser_email() %></td>
+                        <td><%= row.getUser_create() %></td>
+                        <td><%= row.getUser_active() %></td>
                     </tr>
                     <% 
                             } 
@@ -126,24 +134,35 @@
     </div>
 </section>
  <section id="paging">
- <% User paging = (User)request.getAttribute("paging");%>
+ <% User paging = (User)request.getAttribute("paging");
+	String orderParam = request.getParameter("order");
+ %>
+ 
   <%if(paging != null) {%>
   <div class = "center">
      <div class="pagination">
-        <%if(paging.isPrev()){%>
-           <a href = "/User/list?nowPage=<%=(paging.getPageBarStart()-1)%>">&laquo;</a>
-        <%}%>
-        <%for(int i = paging.getPageBarStart() ; i <= paging.getPageBarEnd() ; i++){ %>
-           <a href="/User/list?nowPage=<%=i%>"<%=paging.getNowPage() == i ? "class='active'" : "" %>>
-           <%=i%></a>
-        <%}%>
-        <%if(paging.isNext()){%>
-           <a href="/User/list?nowPage=<%=(paging.getPageBarEnd()+1)%>">&raquo;</a>
-        <%}%>
+          <% if (paging.isPrev()) { %>
+           <a href="/user/check_table?nowPage=<%=(paging.getPageBarStart()-1)%>&order=<%=orderParam%>">&laquo;</a>
+        <% } %>
+        <% for (int i = paging.getPageBarStart(); i <= paging.getPageBarEnd(); i++) { %>
+           <a href="/user/check_table?nowPage=<%=i%>&order=<%=orderParam%>" <%=paging.getNowPage() == i ? "class='active'" : "" %>><%=i%></a>
+        <% } %>
+        <% if (paging.isNext()) { %>
+           <a href="/user/check_table?nowPage=<%=(paging.getPageBarEnd()+1)%>&order=<%=orderParam%>">&raquo;</a>
+        <% } %>
      </div>
    </div>
   <%}%>  
  </section>
- 
+<script>
+function setOrder() {
+	 const orderSelect = document.getElementById('order_select');
+     const orderValue = orderSelect.value;
+     
+     const currentUrl = new URL(window.location.href);
+     currentUrl.searchParams.set('order', orderValue);
+     window.location.href = currentUrl.toString(); 
+}
+    </script>
 </body>
 </html>

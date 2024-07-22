@@ -362,87 +362,62 @@ public class UserDao {
 		}
 		return result;
 	}
-	public List<Map<String, Object>> getAllUsers() {
-        Connection conn = getConnection();
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        List<Map<String, Object>> users = new ArrayList<>();
-        try {
-        	String sql = "SELECT * FROM `users`";
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-            while (rs.next()) {
-                Map<String, Object> userMap = new HashMap<>();
-                userMap.put("user_no", rs.getInt("user_no"));
-                userMap.put("user_name", rs.getString("user_name"));
-                userMap.put("user_id", rs.getString("user_id"));
-                userMap.put("user_pw", rs.getString("user_pw"));
-                userMap.put("user_email", rs.getString("user_email"));
-                userMap.put("user_nickname", rs.getString("user_nickname"));
-                userMap.put("user_active", rs.getInt("user_active"));
-                userMap.put("user_create", rs.getTimestamp("user_create").toLocalDateTime());
-                users.add(userMap);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            close(conn);
-            close(rs);
-            close(pstmt);
-        }
-        return users;
-    }
 	// limit 걸어주는 코드
-	public List<User> selectBoardList(User u){
-		List<User> list = new ArrayList<User>();
-		Connection conn = getConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			String sql = "SELECT * FROM users";
-			sql += " LIMIT "+u.getLimitPageNo()+", "+u.getNumPerPage();
-			
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				User user = new User(rs.getInt("user_no"),
-						rs.getString("user_name"),
-						rs.getString("user_id"),
-						rs.getString("user_pw"),
-						rs.getString("user_email"),
-						rs.getString("user_nickname"),
-						rs.getInt("user_active"),
-						rs.getTimestamp("user_create").toLocalDateTime());
-				list.add(user);
-			}
-			System.out.println(list);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}finally {
-			close(rs);
-			close(pstmt);
-		}
-		return list;
+	public List<User> selectBoardList(User u, String order) {
+	    List<User> list = new ArrayList<User>();
+	    Connection conn = getConnection();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    try {
+	        String sql = "SELECT * FROM users";
+	        if (order != null && !order.isEmpty()) {
+	            sql += " ORDER BY " + order + " ASC";
+	        }
+	        sql += " LIMIT " + u.getLimitPageNo() + ", " + u.getNumPerPage();
+	        
+	        System.out.println("Generated SQL: " + sql);
+	        
+	        pstmt = conn.prepareStatement(sql);
+	        rs = pstmt.executeQuery();
+	        while (rs.next()) {
+	            User user = new User(rs.getInt("user_no"),
+	                    rs.getString("user_name"),
+	                    rs.getString("user_id"),
+	                    rs.getString("user_pw"),
+	                    rs.getString("user_email"),
+	                    rs.getString("user_nickname"),
+	                    rs.getInt("user_active"),
+	                    rs.getTimestamp("user_create").toLocalDateTime());
+	            list.add(user);
+	        }
+	        System.out.println(list);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        close(rs);
+	        close(pstmt);
+	    }
+	    return list;
 	}
-	
+
 	public int selectBoardCount(User u) {
-		int result = 0;
-		Connection conn = getConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			String sql = "SELECT COUNT(*) AS cnt FROM users";
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				result = rs.getInt("cnt");
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}finally {
-			close(rs);
-			close(pstmt);
-		}
-		return result;
+	    int result = 0;
+	    Connection conn = getConnection();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    try {
+	        String sql = "SELECT COUNT(*) AS cnt FROM users";
+	        pstmt = conn.prepareStatement(sql);
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            result = rs.getInt("cnt");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        close(rs);
+	        close(pstmt);
+	    }
+	    return result;
 	}
 }

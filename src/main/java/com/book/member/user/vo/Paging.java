@@ -16,7 +16,7 @@ public class Paging {
     // 현재 페이지
     private int nowPage = 1;
     // 목록에 보여질 게시글 개수
-    private int numPerPage = 8;
+    private int numPerPage = 12;
     // 쿼리에 사용할 LIMIT 값
     private int limitPageNo;
 

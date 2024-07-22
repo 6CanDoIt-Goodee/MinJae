@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.book.member.user.dao.UserDao;
+import com.book.member.user.vo.User;
 
 @WebServlet("/user/check_table")
 public class UserCheckTableServlet extends HttpServlet {
@@ -25,14 +26,25 @@ public class UserCheckTableServlet extends HttpServlet {
 
    
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       UserDao userDao = new UserDao();
-       List<Map<String, Object>> user = userDao.getAllUsers();
-
-       HttpSession session = request.getSession();
-       session.setAttribute("user", user);
+       User u = new User();
+       String nowPage = request.getParameter("nowPage");
+       String order = request.getParameter("order");
+       System.out.println("Order parameter before check: " + order);
+       if(nowPage != null) {
+    	   u.setNowPage(Integer.parseInt(nowPage));
+       }
+       System.out.println("Order parameter after check: " + order);
+       //전체 목록 개수 조회 -> 페이징바 구성 
+       u.setTotalData(new UserDao().selectBoardCount(u));
+       System.out.println(u);
+       
+       List<User> list = new UserDao().selectBoardList(u,order);
+       request.setAttribute("paging", u);
+       request.setAttribute("resultList", list);
 
        RequestDispatcher view = request.getRequestDispatcher("/views/user/check_table.jsp");
       view.forward(request, response);
+      
    }
 
    

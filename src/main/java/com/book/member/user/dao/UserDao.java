@@ -261,7 +261,7 @@ public class UserDao {
 		int result = 0;
 		try {
 			 int emailCount = getEmailCount(email);
-		        if (emailCount >= 3) {
+		        if (emailCount >= 4) {
 		            return -1; 
 		        }
 

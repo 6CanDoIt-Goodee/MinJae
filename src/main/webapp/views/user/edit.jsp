@@ -272,7 +272,6 @@
         }
     }
     
-    
     function submit_button() {
         const form = document.modify_account_form;
         const lengthPattern = /^[a-zA-Z\d@$!%*?&]{8,16}$/;
@@ -282,8 +281,11 @@
         const namePattern1 = /^[가-힣]{2,4}$/;
         const namePattern2 = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/; 
         
-        if (!form.pw.value) {
-        	alert("비밀번호를 입력하세요.");
+        if (!form.id.value) {
+            alert("아이디를 입력하세요.");
+            form.id.focus();
+        } else if (!form.pw.value) {
+            alert("비밀번호를 입력하세요.");
             form.pw.focus();
         } else if (!form.chpw.value) {
             alert("비밀번호 확인을 입력하세요.");

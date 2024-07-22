@@ -32,7 +32,10 @@ public class UserEditEndServlet extends HttpServlet {
 		String pw = request.getParameter("pw");
 		String name = request.getParameter("name");
 		String nickname = request.getParameter("nickname");
-		String email = request.getParameter("email");
+		String email_prefix = request.getParameter("email_prefix");
+	    String email_domain = request.getParameter("email_domain");
+	    String email = email_prefix + "@" + email_domain;
+		
 		int result = new UserDao().editUser(no,pw,name,nickname,email);
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter writer = response.getWriter();

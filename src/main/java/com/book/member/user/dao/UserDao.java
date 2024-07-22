@@ -260,6 +260,16 @@ public class UserDao {
 		Connection conn =getConnection();
 		int result = 0;
 		try {
+			 int emailCount = getEmailCount(email);
+		        if (emailCount >= 3) {
+		            return -1; 
+		        }
+
+		        // 닉네임 중복 여부 확인
+		        int nicknameCount = isNicknameExists(nickname);
+		        if (nicknameCount > 0) {
+		            return -2; 
+		        }
 			String sql = "UPDATE `users` set user_pw=?,user_email=?, user_name=?,user_nickname=? WHERE user_no=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1,pw);

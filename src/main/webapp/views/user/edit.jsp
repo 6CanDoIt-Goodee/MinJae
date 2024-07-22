@@ -147,8 +147,9 @@
                 </div>
             <div class="form-group">
                     <label for="nickname">닉네임</label>
-                    <input type="text" placeholder="닉네임을 입력해주세요." name="nickname" style="width: 500px;">
-                    <input type="button" value="닉네임 랜덤 생성">
+                    <input type="text" placeholder="닉네임을 입력해주세요." id="nickname" name="nickname" style="width: 500px;">
+                    <input type="button" onclick="checkNickname();" value="닉네임 중복확인">
+                    <input type="button" onclick="generateNickname();" value="닉네임 랜덤 생성">
                 </div>
             <div class="button-group">
                 <button type="button" class="btn" onclick="submit_button();">수정 완료</button>
@@ -226,8 +227,50 @@
         };
         xhr.send("email=" + encodeURIComponent(email) + "&code=" + encodeURIComponent(code));
     }
+ // 닉네임 랜덤생성
+    function generateNickname() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/user/nicknameRandom', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                document.getElementById('nickname').value = xhr.responseText;
+            } else if (xhr.readyState === 4) {
+                alert('닉네임 생성에 실패하였습니다.');
+            }
+        };
+        xhr.send();
+    }
     
-    
+ // 닉네임 중복 확인 함수 정의
+    function checkNickname() {
+        const form = document.modify_account_form;
+        const nickname = form.nickname.value;
+        
+        const letterNumberHangulPattern = /^[a-zA-Z0-9가-힣\s]{2,16}$/;
+        
+        if (!nickname) {
+            alert("닉네임을 입력하세요.");
+            form.nickname.focus();
+        }else if (!letterNumberHangulPattern.test(nickname)) {
+            alert('닉네임은 길이 2~16자의 영문자 또는 한글만 포함할 수 있습니다.');
+            form.nickname.focus();
+        } else {
+            // AJAX 요청을 사용하여 아이디 중복 확인
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/user/checkNickname", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    if (xhr.responseText === "duplicate") {
+                        alert("중복된 닉네임입니다.");
+                    } else if (xhr.responseText === "available") {
+                        alert("사용 가능한 닉네임입니다.");
+                    }
+                }
+            };
+            xhr.send("nickname=" + encodeURIComponent(nickname));
+        }
+    }
     
     
     function submit_button() {

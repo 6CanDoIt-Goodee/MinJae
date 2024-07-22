@@ -1,6 +1,7 @@
 package com.book.member.user.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,11 +34,26 @@ public class UserEditEndServlet extends HttpServlet {
 		String nickname = request.getParameter("nickname");
 		String email = request.getParameter("email");
 		int result = new UserDao().editUser(no,pw,name,nickname,email);
-		if(result > 0) {
-			response.sendRedirect("/");
-		}else {
-			System.out.println("실패");
-		}
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter writer = response.getWriter();
+		if (result == -1) {
+            // 이메일당 계정 수 제한 초과
+        	writer.println("<script>alert('해당 이메일로는 더 이상 계정을 생성할 수 없습니다. (최대 3개)');location.href='/views/user/edit.jsp';</script>");
+	        writer.flush(); 
+	        return;
+        } else if (result > 0) {
+            writer.println("<script>alert('회원정보가 정상적으로 수정되었습니다.');location.href='/';</script>");
+	        writer.flush(); 
+	        return;
+        } else if(result == -2) {
+        	writer.println("<script>alert('이미 사용 중인 닉네임입니다. 다른 닉네임을 선택해주세요.');location.href='/views/user/edit.jsp';</script>");
+	        writer.flush(); 
+	        return;
+        }else {
+        	writer.println("<script>alert('회원정보 수정에 실패했습니다.');location.href='/views/user/edit.jsp';</script>");
+	        writer.flush(); 
+	        return;
+        }
 	}
 	
 	

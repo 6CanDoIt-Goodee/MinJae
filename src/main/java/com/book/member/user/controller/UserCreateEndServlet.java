@@ -3,6 +3,8 @@ package com.book.member.user.controller;
 
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,7 +33,8 @@ public class UserCreateEndServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String sessionCode = (String) session.getAttribute("verificationCode");
         String inputCode = request.getParameter("email_number");
-        
+        response.setContentType("text/html; charset=UTF-8");
+		PrintWriter writer = response.getWriter();
 
         if (sessionCode != null && sessionCode.equals(inputCode)) {
             User user = new User();
@@ -44,11 +47,15 @@ public class UserCreateEndServlet extends HttpServlet {
             System.out.println(result);
             if (result == -1) {
                 // 이메일당 계정 수 제한 초과
-                request.getRequestDispatcher("/views/user/three_email.jsp").forward(request, response);
+            	writer.println("<script>alert('해당 이메일로는 더 이상 계정을 생성할 수 없습니다. (최대 3개)');location.href='/views/user/create.jsp';</script>");
+    	        writer.flush(); 
+    	        return;
             } else if (result > 0) {
                 response.sendRedirect("/views/user/create_success.jsp");
             } else {
-            	response.sendRedirect("/");
+            	writer.println("<script>alert('이미 사용 중인 닉네임입니다. 다른 닉네임을 선택해주세요.');location.href='/views/user/create.jsp';</script>");
+    	        writer.flush(); 
+    	        return;
             }
         }
     }

@@ -102,13 +102,12 @@
          <% }else{ %>
          <div class="header_div">
          	<a href="#" class="main_logo">Knock Book</a>
-         	<%User u= (User)session.getAttribute("user");%>
 			<ul>
 				<li>
 					<a href="/board/create"class="header_list" id="header_join">게시글 등록</a>
 				</li>
 				<li>
-					<%=u.getUser_id()+"님 환영합니다." %>
+					<%=user.getUser_id()+"님 환영합니다." %>
 					<a href="/user/logout"class="header_list" id="header_join">로그아웃</a>
 				</li>
 				<li>

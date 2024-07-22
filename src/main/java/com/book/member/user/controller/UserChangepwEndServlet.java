@@ -1,6 +1,7 @@
 package com.book.member.user.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,37 +11,34 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.book.member.user.dao.UserDao;
-import com.book.member.user.vo.User;
 
-@WebServlet(name="userEditEnd",urlPatterns="/user/editEnd")
-public class UserEditEndServlet extends HttpServlet {
+@WebServlet(name="userchanagepwEnd",urlPatterns="/user/changepw")
+public class UserChangepwEndServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
    
-    public UserEditEndServlet() {
+    public UserChangepwEndServlet() {
         super();
     }
+
+	
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(false); 
-		int no = 0;
-		User u = new User();
-		if(session != null) {
-			u =(User)session.getAttribute("user"); 
-			no = u.getUser_no();
-			}
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter writer = response.getWriter();
+		String id = (String) session.getAttribute("user_id");
 		String pw = request.getParameter("pw");
-		String name = request.getParameter("name");
-		String nickname = request.getParameter("nickname");
-		String email = request.getParameter("email");
-		int result = new UserDao().editUser(no,pw,name,nickname,email);
+		int result = new UserDao().changepw(id,pw);
+		System.out.println("id는?"+id);
+		System.out.println(pw);
 		if(result > 0) {
-			response.sendRedirect("/");
+			response.sendRedirect("/views/user/changepw_success.jsp");
 		}else {
-			System.out.println("실패");
+			writer.println("<script>alert('변경실패 다시 시도해주세요.');location.href='/views/user/changepw.jsp';</script>");
+	        writer.flush(); 
+	        return;
 		}
 	}
-	
-	
 		
 
 	

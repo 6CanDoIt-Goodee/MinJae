@@ -1,6 +1,7 @@
 package com.book.member.user.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,13 +22,16 @@ public class UserLogoutServlet extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter writer = response.getWriter();
 		HttpSession session = request.getSession(false);
 		if(session != null && session.getAttribute("user")!=null) {
 			session.removeAttribute("user");
 			session.invalidate();
 		}
-		response.sendRedirect("/"); 
+		writer.println("<script>alert('로그아웃되었습니다.');location.href='/';</script>");
+        writer.flush(); 
+        return;
 	}
 
 	

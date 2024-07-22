@@ -1,6 +1,7 @@
 package com.book.member.user.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,18 +32,19 @@ public class UserCheckpwEndServlet extends HttpServlet {
 		User u = new UserDao().checkpw(pw);
 		HttpSession session = request.getSession(false);
 		User sessionUser = (User) session.getAttribute("user");
-		
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter writer = response.getWriter();
 		
 		if(u != null && sessionUser.getUser_pw().equals(pw)) {
 			if(session.isNew() || session.getAttribute("user")==null) {
 				session.setAttribute("user", u);
 				session.setMaxInactiveInterval(60*30);
 			}
-			System.out.println("성공");
 			response.sendRedirect("/views/user/edit.jsp");
 		}else {
-			response.sendRedirect("/views/user/checkpw_fail.jsp");
-			System.out.println("실패");
+			writer.println("<script>alert('비밀번호가 틀립니다. 다시 입력해주세요.');location.href='/views/user/checkpw.jsp';</script>");
+	        writer.flush(); 
+	        return;
 		}
 	}
 

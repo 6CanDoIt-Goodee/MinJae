@@ -1,6 +1,7 @@
 package com.book.member.user.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -18,7 +19,6 @@ import com.book.member.user.vo.User;
 public class UserFindIdEndServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    // GET 요청을 처리하도록 doGet 메소드 추가
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("/views/user/findid.jsp");
         dispatcher.forward(request, response);
@@ -33,6 +33,8 @@ public class UserFindIdEndServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String sessionCode = (String) session.getAttribute("verificationCode");
         String inputCode = request.getParameter("email_number");
+        response.setContentType("text/html; charset=UTF-8");
+		PrintWriter writer = response.getWriter();
 
         if (sessionCode != null && sessionCode.equals(inputCode)) {
             List<User> user = new UserDao().findid(name,email);
@@ -41,10 +43,14 @@ public class UserFindIdEndServlet extends HttpServlet {
             	session.setAttribute("user", user);
             	response.sendRedirect("/views/user/findid_success.jsp");
             } else {
-            	response.sendRedirect("/views/user/findid_fail.jsp");
+            	writer.println("<script>alert('이름 또는 이메일이 잘못 되었습니다.                                         아이디와 이메일을 정확히 입력해 주세요.');location.href='/views/user/findid.jsp';</script>");
+    	        writer.flush(); 
+    	        return;
             }
         } else {
-            response.getWriter().write("인증 실패");
+        	writer.println("<script>alert('이름 또는 이메일이 잘못 되었습니다.                                        아이디와 이메일을 정확히 입력해 주세요.');location.href='/views/user/findpw.jsp';</script>");
+	        writer.flush(); 
+	        return;
         }
     }
 }

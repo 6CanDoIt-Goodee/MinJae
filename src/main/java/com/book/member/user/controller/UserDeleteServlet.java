@@ -8,10 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import com.book.member.user.dao.UserDao;
-import com.book.member.user.vo.User;
 
 @WebServlet("/user/delete")
 public class UserDeleteServlet extends HttpServlet {

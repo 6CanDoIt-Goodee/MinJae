@@ -18,7 +18,7 @@
             <p>비밀번호를 재설정 해주세요.</p>
         </div>
         <div>
-            <form name="changepw_form" action="/user/changePw" method="post">
+            <form name="changepw_form" action="/user/changepw" method="post">
             <div class="form-group">
                 <label for="pw">새 비밀번호</label>
                 <div style="display: flex; align-items: center;">

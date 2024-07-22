@@ -23,7 +23,7 @@
         <form name="findpw_form" action="/user/findpwend" method="post">
             <div class="form-group">
                 <label for="name">아이디 :</label>
-                <input type="text" id="id" name="id" placeholder="이름을 입력하세요" style="width: 352px;">
+                <input type="text" id="id" name="id" placeholder="아이디를 입력하세요" style="width: 352px;">
             </div>
             <div class="form-group">
                 <label for="email">이메일:</label>

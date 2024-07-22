@@ -36,20 +36,25 @@ public class UserFindPwEndServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
 		PrintWriter writer = response.getWriter();
 		
-        if (sessionCode != null && sessionCode.equals(inputCode)) {
-            User user = new UserDao().findpw(id,email);
+		if (sessionCode != null && sessionCode.equals(inputCode)) {
+            User user = new UserDao().findpw(id, email);
             if (user != null) {
-            	session.setAttribute("user_id", user.getUser_id());
-            	response.sendRedirect("/views/user/changepw.jsp");
+                if (user.getUser_active() == 0) {
+                    writer.println("<script>alert('탈퇴한 회원입니다.');location.href='/views/user/findpw.jsp';</script>");
+                    writer.flush();
+                    return;
+                }
+                session.setAttribute("user_id", user.getUser_id());
+                response.sendRedirect("/views/user/changepw.jsp");
             } else {
             	writer.println("<script>alert('아이디 또는 이메일이 잘못 되었습니다.                                     아이디와 이메일을 정확히 입력해 주세요.');location.href='/views/user/findpw.jsp';</script>");
-    	        writer.flush(); 
-    	        return;
+                writer.flush();
+                return;
             }
         } else {
         	writer.println("<script>alert('아이디 또는 이메일이 잘못 되었습니다.                                     아이디와 이메일을 정확히 입력해 주세요.');location.href='/views/user/findpw.jsp';</script>");
-	        writer.flush(); 
-	        return;
+            writer.flush();
+            return;
         }
     }
 }

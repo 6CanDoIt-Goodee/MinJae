@@ -221,13 +221,35 @@ public class UserDao {
 		return u;
 	}
 	
+	public int check_delete(String name) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Connection conn = getConnection();
+        int count = 0;
+        try {
+            String sql = "SELECT `user_active` AS count FROM `users` WHERE `user_name` = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, name);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("count");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(conn);
+            close(rs);
+            close(pstmt);
+        }
+        return count;
+    }
+	
 	public User findpw(String id,String email) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		Connection conn =getConnection();
 		User u=null;
 		try {
-			
 			String sql = "SELECT * FROM `users` WHERE `user_id`=? AND `user_email` = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
@@ -312,7 +334,8 @@ public class UserDao {
         Connection conn = getConnection();
         List<User> resultList =new ArrayList<User>();
         try {
-        String sql = "SELECT * FROM `users` WHERE `user_name` = ? AND `user_email` = ?";
+        	
+        String sql = "SELECT * FROM `users` WHERE `user_name` = ? AND `user_email` = ? AND `user_active` != 0";
         pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, name);
         pstmt.setString(2, email);

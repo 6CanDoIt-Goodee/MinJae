@@ -8,9 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.book.member.user.vo.User;
 
@@ -200,6 +198,7 @@ public class UserDao {
 		Connection conn =getConnection();
 		User u=null;
 		try {
+			
 			String sql = "SELECT * FROM `users` WHERE `user_id`=? AND `user_email` = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
@@ -371,8 +370,10 @@ public class UserDao {
 	    try {
 	        String sql = "SELECT * FROM users";
 	        if (order != null && !order.isEmpty()) {
-	            sql += " ORDER BY " + order + " ASC";
-	        }
+	        	sql += " ORDER BY " +
+	                    "CAST(REGEXP_REPLACE(" + order + ", '[^0-9]', '') AS UNSIGNED), " +
+	                    order + " ASC";
+	         }
 	        sql += " LIMIT " + u.getLimitPageNo() + ", " + u.getNumPerPage();
 	        
 	        System.out.println("Generated SQL: " + sql);

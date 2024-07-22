@@ -52,8 +52,12 @@ public class UserCreateEndServlet extends HttpServlet {
     	        return;
             } else if (result > 0) {
                 response.sendRedirect("/views/user/create_success.jsp");
-            } else {
+            } else if(result == -2) {
             	writer.println("<script>alert('이미 사용 중인 닉네임입니다. 다른 닉네임을 선택해주세요.');location.href='/views/user/create.jsp';</script>");
+    	        writer.flush(); 
+    	        return;
+            }else {
+            	writer.println("<script>alert('회원가입에 실패했습니다.');location.href='/views/user/create.jsp';</script>");
     	        writer.flush(); 
     	        return;
             }

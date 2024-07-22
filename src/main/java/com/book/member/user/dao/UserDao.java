@@ -40,6 +40,29 @@ public class UserDao {
         return count;
     }
 	
+	public int isNicknameExists(String nickname) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Connection conn = getConnection();
+        int count = 0;
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM `users` WHERE `user_nickname` = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, nickname);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("count");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(conn);
+            close(rs);
+            close(pstmt);
+        }
+        return count;
+    }
+	
 	public int createUser(User u) {
         PreparedStatement pstmt = null;
         Connection conn = getConnection();
@@ -50,6 +73,12 @@ public class UserDao {
             if (emailCount >= 3) {
                 return -1; 
             }
+            
+            int nicknameCount = isNicknameExists(u.getUser_nickname());
+            if (nicknameCount > 0) {
+                return -2;
+            }
+            
             String sql = "INSERT INTO `users`(user_name, user_id, user_pw, user_email, user_nickname) VALUES(?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, u.getUser_name());

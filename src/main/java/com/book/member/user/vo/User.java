@@ -2,7 +2,7 @@ package com.book.member.user.vo;
 
 import java.time.LocalDateTime;
 
-public class User {
+public class User extends Paging{
 	private int user_no;
 	private String user_name;
 	private String user_id;

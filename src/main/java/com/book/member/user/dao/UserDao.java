@@ -3,6 +3,7 @@ package com.book.member.user.dao;
 import static com.book.common.sql.JDBCTemplate.close;
 import static com.book.common.sql.JDBCTemplate.getConnection;
 
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.book.member.user.vo.User;
+
 
 
 
@@ -390,4 +392,57 @@ public class UserDao {
         }
         return users;
     }
+	// limit 걸어주는 코드
+	public List<User> selectBoardList(User u){
+		List<User> list = new ArrayList<User>();
+		Connection conn = getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT * FROM users";
+			sql += " LIMIT "+u.getLimitPageNo()+", "+u.getNumPerPage();
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				User user = new User(rs.getInt("user_no"),
+						rs.getString("user_name"),
+						rs.getString("user_id"),
+						rs.getString("user_pw"),
+						rs.getString("user_email"),
+						rs.getString("user_nickname"),
+						rs.getInt("user_active"),
+						rs.getTimestamp("user_create").toLocalDateTime());
+				list.add(user);
+			}
+			System.out.println(list);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return list;
+	}
+	
+	public int selectBoardCount(User u) {
+		int result = 0;
+		Connection conn = getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			String sql = "SELECT COUNT(*) AS cnt FROM users";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt("cnt");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		return result;
+	}
 }

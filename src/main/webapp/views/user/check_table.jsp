@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.List" %>
 <%@page import="java.util.Map" %>
+<%@page import="com.book.member.user.vo.User" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,16 +83,11 @@
 <body>
 <section>
     <div id="section_wrap" class="container">
-         <form action="/user/check_table" method="get">
-            <input type="submit" value="Load Users">
-        </form>
-        
-
         <div class="book_list">
             <table class="book_table">
                 <thead>
                     <tr>
-                        <th>이미지</th>
+                        <th>이름</th>
                         <th>닉네임</th>
                         <th>아이디</th>
                         <th>이메일</th>
@@ -129,25 +125,25 @@
         </div>
     </div>
 </section>
-<%-- <% BookText paging = (BookText)request.getAttribute("paging");%>
-
-<% if(paging != null){ %>
-    <div class="center">
-        <div class="pagination">
-            <% if(paging.isPrev()){ %>
-                <a href="/user/saveTextList?nowPage=<%=(paging.getPageBarStart()-1)%>">&laquo;</a>
-            <%}%>
-            <% for(int i = paging.getPageBarStart() ; i <= paging.getPageBarEnd() ; i++) {%>
-                <a href="/user/saveTextList?nowPage=<%=i%>"
-                   <%=paging.getNowPage() == i ? "class='active'" : ""%>>
-                    <%=i%>
-                </a>
-            <%}%>
-            <% if(paging.isNext()){%>
-                <a href="/user/saveTextList?nowPage=<%=(paging.getPageBarEnd()+1)%>">&raquo;</a>
-            <%}%>
-        </div>
-    </div>
-<% } %> --%>
+ <section id="paging">
+ <% User paging = (User)request.getAttribute("paging");%>
+  <%if(paging != null) {%>
+  <div class = "center">
+     <div class="pagination">
+        <%if(paging.isPrev()){%>
+           <a href = "/User/list?nowPage=<%=(paging.getPageBarStart()-1)%>">&laquo;</a>
+        <%}%>
+        <%for(int i = paging.getPageBarStart() ; i <= paging.getPageBarEnd() ; i++){ %>
+           <a href="/User/list?nowPage=<%=i%>"<%=paging.getNowPage() == i ? "class='active'" : "" %>>
+           <%=i%></a>
+        <%}%>
+        <%if(paging.isNext()){%>
+           <a href="/User/list?nowPage=<%=(paging.getPageBarEnd()+1)%>">&raquo;</a>
+        <%}%>
+     </div>
+   </div>
+  <%}%>  
+ </section>
+ 
 </body>
 </html>

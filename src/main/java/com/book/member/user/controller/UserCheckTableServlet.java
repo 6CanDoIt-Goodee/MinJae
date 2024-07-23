@@ -29,11 +29,12 @@ public class UserCheckTableServlet extends HttpServlet {
        User u = new User();
        String nowPage = request.getParameter("nowPage");
        String order = request.getParameter("order");
-       System.out.println("Order parameter before check: " + order);
+       String name = request.getParameter("user_name");
+       u.setUser_name(name);
+       
        if(nowPage != null) {
     	   u.setNowPage(Integer.parseInt(nowPage));
        }
-       System.out.println("Order parameter after check: " + order);
        //전체 목록 개수 조회 -> 페이징바 구성 
        u.setTotalData(new UserDao().selectBoardCount(u));
        System.out.println(u);

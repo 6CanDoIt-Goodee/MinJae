@@ -431,6 +431,9 @@ public class UserDao {
 	    ResultSet rs = null;
 	    try {
 	        String sql = "SELECT * FROM users";
+	        if (u.getUser_name() != null && !u.getUser_name().isEmpty()) {
+	            sql += " WHERE user_name LIKE CONCAT('%','"+u.getUser_name()+"', '%')";
+	        }
 	        if (order != null && !order.isEmpty()) {
 	        	sql += " ORDER BY " +
 	                    "CAST(REGEXP_REPLACE(" + order + ", '[^0-9]', '') AS UNSIGNED), " +
@@ -470,6 +473,9 @@ public class UserDao {
 	    ResultSet rs = null;
 	    try {
 	        String sql = "SELECT COUNT(*) AS cnt FROM users";
+	        if (u.getUser_name() != null && !u.getUser_name().isEmpty()) {
+	            sql += " WHERE user_name LIKE CONCAT('%','"+u.getUser_name()+"', '%')";
+	        }
 	        pstmt = conn.prepareStatement(sql);
 	        rs = pstmt.executeQuery();
 	        if (rs.next()) {

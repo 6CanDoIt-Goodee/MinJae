@@ -77,13 +77,31 @@
             background-color: #4cae4c;
             color: white;
         }
+#section_wrap .search input[type='text'] {
+	width: 300px;
+	padding: 10px;
+	border: 1px solid #adadad;
+	border-radius: 5px;
+}
+#section_wrap .search input[type='submit'] {
+	width: 80px;
+	padding: 10px;
+	border: 1px solid #adadad;
+	border-radius: 5px;
+	cursor: pointer;
+}
     </style>
     
 </head>
 <body>
 <section>
     <div id="section_wrap" class="container">
+    <form action="check_table" name="search_name_form" method="get" class="search">
+				<input type="text" name="user_name" placeholder="검색하고자하는 사용자 이름을 입력하세요.">
+				<input type="submit" value="검색">
+		</form>
         <div class="book_list">
+        
             <table class="book_table">
             <select id="order_select" name="order_select" onchange="setOrder();">
                 <option value="">정렬</option>

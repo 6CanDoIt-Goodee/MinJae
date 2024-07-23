@@ -2,7 +2,6 @@ package com.book.member.user.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,23 +15,19 @@ import com.book.member.user.vo.User;
 @WebServlet(name="userLoginEnd",urlPatterns="/user/loginEnd")
 public class UserLoginEndServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    
+
     public UserLoginEndServlet() {
         super();
-        
     }
 
-	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 로그인 -> 비밀번호 확인(사용자 입력 == 회원가입)
-		// 회원가입 비밀번호 암호화 == 사용자 입력 암호화
 		String id = request.getParameter("id");
 		String pw = request.getParameter("pw");
 		
-		User u = new UserDao().loginUser(id,pw);
+		User u = new UserDao().loginUser(id, pw);
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter writer = response.getWriter();
+		HttpSession session = request.getSession();
 
 		if (u != null) {
 		    if (u.getUser_active() == 0) {
@@ -41,24 +36,31 @@ public class UserLoginEndServlet extends HttpServlet {
 		        return;
 		    }
 			
-			HttpSession session = request.getSession(true);
-			if(session.isNew() || session.getAttribute("user")==null) {
+			if(session.isNew() || session.getAttribute("user") == null) {
 				session.setAttribute("user", u);
 				session.setMaxInactiveInterval(60*30);
 			}
 			System.out.println("성공");
 			response.sendRedirect("/");
-		}else {
-			writer.println("<script>alert('아이디 또는 비밀번호가 잘못 되었습니다.                                  아이디와 비밀번호를 정확히 입력해 주세요.');location.href='/user/login';</script>");
-	        writer.flush(); 
-	        return;
+		} else {
+			Integer loginFailCount = (Integer) session.getAttribute("loginFailCount");
+			if (loginFailCount == null) {
+				loginFailCount = 0;
+			}
+			loginFailCount++;
+			session.setAttribute("loginFailCount", loginFailCount);
+
+			if (loginFailCount >= 3) {
+				writer.println("<script>if(confirm('로그인 시도가 3회 실패했습니다. 아이디를 찾으시겠습니까?')){ location.href='/user/findid'; } else { location.href='/user/login'; }</script>");
+				session.setAttribute("loginFailCount", 0); 
+			} else {
+				writer.println("<script>alert('아이디 또는 비밀번호가 잘못 되었습니다.                                  아이디와 비밀번호를 정확히 입력해 주세요.');location.href='/user/login';</script>");
+			}
+			writer.flush(); 
 		}
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		doGet(request, response);
 	}
-
 }

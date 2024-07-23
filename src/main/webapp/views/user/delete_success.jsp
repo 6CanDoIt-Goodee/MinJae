@@ -19,9 +19,7 @@
 			<div style="font-size: 40px;">웹 사이트 회원 탈퇴 완료</div>
 		</main>
 		<footer>
-			<a href="/views/user/login.jsp"> 
 			<input class="btn" type="button" value="홈으로" style="margin-right: 20px;"onclick="location.href='/'">
-			</a> 
 		</footer>
 	</section>
 </body>
